@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kiosk</title>
+</head>
+<body>
+    <div>
+        <h2>메뉴</h2>
+        <div>
+            <div>
+                <button data-category="전체">전체</button>
+            </div>
+            <div>
+                <button data-category="한식">한식</button>
+                <button data-category="한식" title="카테고리 삭제"> - </button>
+            </div>
+            <div>
+                <button data-category="일식">일식</button>
+                <button data-category="일식" title="카테고리 삭제"> - </button>
+            </div>
+            <div>
+                <button data-category="음료">음료</button>
+                <button data-category="음료" title="카테고리 삭제"> - </button>
+            </div>
+            <button id="addCategoryBtn">+</button>
+        </div>
+        
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>음식명</th>
+                        <th>가격</th>
+                        <th>설명</th>
+                        <th>카테고리</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="menuTableBody"></tbody>
+            </table>
+        </div>
+        <button id="menuRegisterBtn">메뉴 등록</button>
+    </div>
+</body>
+</html>
