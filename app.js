@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "2", name: "피자",    price: 22000, desc: "치즈 폭탄",    categoryId: "italian" },
     { id: "3", name: "초밥",    price: 18000, desc: "모둠초밥",     categoryId: "japanese" }
   ];
-
   
   let orders = [];
   let selectedCategory = "all";
@@ -137,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     orderList.innerHTML = "";
     let total = 0;
     
+    
     if (orders.length === 0) {
       orderList.innerHTML = '<p class="no-items">주문한 음식이 없습니다.</p>';
       totalAmount.textContent = "0";
@@ -160,7 +160,12 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class="quantity-btn plus">+</button>
         </div>
       `;
-      
+
+      total += food.price * order.quantity;
+      totalAmount.textContent = formatNumber(total);
+      orderList.appendChild(orderItem);
+
+      // --------- 주문 수량, 합계란 ---------------
       const quantityInput = orderItem.querySelector(".quantity-input");
       const minusBtn = orderItem.querySelector(".minus");
       const plusBtn = orderItem.querySelector(".plus");
@@ -174,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           order.quantity = newQuantity;
         }
-        renderOrders();
+        renderTotalPrice();
       };
       
       // 마이너스 버튼
@@ -182,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (order.quantity > 1) {
           order.quantity--;
           quantityInput.value = order.quantity;
-          renderOrders();
+          renderTotalPrice();
         }
       };
       
@@ -191,15 +196,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (order.quantity < 99) {
           order.quantity++;
           quantityInput.value = order.quantity;
-          renderOrders();
+          renderTotalPrice();
         }
-      };
-      
-      orderList.appendChild(orderItem);
-      total += food.price * order.quantity;
+      };      
     });
     
-    totalAmount.textContent = formatNumber(total);
+  }
+
+  function renderTotalPrice(){
+    let total = 0;
+    orders.forEach(order => {
+      const food = foods.find(f => f.id === order.foodId);
+      total += food.price * order.quantity;
+      totalAmount.textContent = formatNumber(total);
+    });
   }
 
   // 카테고리 추가 팝업
