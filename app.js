@@ -213,11 +213,15 @@ document.addEventListener("DOMContentLoaded", () => {
       totalAmount.textContent = formatNumber(total);
     });
   }
+  
+  function popupStyleDisplay(popup, type){
+    popup.style.display = type;
+  }
 
   // 카테고리 추가 팝업
   document.getElementById("addCategoryBtn").onclick = () => {
     document.getElementById("categoryName").value = "";
-    categoryPopup.style.display = "block";
+    popupStyleDisplay(categoryPopup, "block");
   };
 
   // 메뉴 추가 팝업
@@ -237,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("foodName").value = "";
     document.getElementById("foodPrice").value = "";
     document.getElementById("foodDesc").value = "";
-    foodPopup.style.display = "block";
+    popupStyleDisplay(foodPopup, "block");
   };
 
   // 카테고리 저장
@@ -251,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       categories.push(newCategory);
       renderCategories();
-      categoryPopup.style.display = "none";
+      popupStyleDisplay(categoryPopup, "none");
     } else {
       alert("카테고리명을 입력해주세요.");
     }
@@ -289,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     foods.push(newFood);
     renderFoods();
-    foodPopup.style.display = "none";
+    popupStyleDisplay(foodPopup,"none")
   };
 
   // 팝업 닫기
