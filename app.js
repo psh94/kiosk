@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let orders = [];
   let selectedCategory = "all";
 
+  const dateNowString = Date.now().toString();
+
   // DOM 요소들
   const categoryList    = document.getElementById("categoryList");
   const menuList        = document.getElementById("menuList");
@@ -243,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = document.getElementById("categoryName").value.trim();
     if (name) {
       const newCategory = {
-        id: Date.now().toString(),
+        id: dateNowString,
         name: name,
         builtin: false
       };
@@ -278,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     const newFood = {
-      id: Date.now().toString(),
+      id: dateNowString,
       name: name,
       price: price,
       desc: desc,
