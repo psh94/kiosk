@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   // 초기 데이터
   let categories = [
     { id: "all",        name: "전체", builtin: true },
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "2", name: "피자",    price: 22000, desc: "치즈 폭탄",    categoryId: "italian" },
     { id: "3", name: "초밥",    price: 18000, desc: "모둠초밥",     categoryId: "japanese" }
   ];
+
   
   let orders = [];
   let selectedCategory = "all";
@@ -26,6 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const categoryPopup   = document.getElementById("categoryPopup");
   const foodPopup       = document.getElementById("foodPopup");
+
+  function formatNumber(num) {
+    return num.toLocaleString("ko-KR");
+  }
 
   // 카테고리 렌더링
   function renderCategories() {
