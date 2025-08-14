@@ -1,0 +1,621 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  min-height: 80vh;
+}
+
+/* 메뉴 섹션 */
+.menu-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category-filters {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.category-filters h3 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.category-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.category-btn {
+  padding: 10px 20px;
+  border: 2px solid #3498db;
+  background: white;
+  color: #3498db;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.category-btn:hover {
+  background: #3498db;
+  color: white;
+}
+
+.category-btn.active {
+  background: #3498db;
+  color: white;
+}
+
+.category-btn.delete {
+  border-color: #e74c3c;
+  color: #e74c3c;
+  padding: 8px 15px;
+  font-size: 0.8rem;
+}
+
+.category-btn.delete:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+.add-category-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #27ae60;
+  background: white;
+  color: #27ae60;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.add-category-btn:hover {
+  background: #27ae60;
+  color: white;
+}
+
+.menu-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.food-item {
+  background: white;
+  border: 2px solid #ecf0f1;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.food-item:hover {
+  border-color: #3498db;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.2);
+  transform: translateY(-2px);
+}
+
+.food-item h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.food-item .price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e74c3c;
+  margin-bottom: 8px;
+}
+
+.food-item .description {
+  color: #7f8c8d;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.food-item .actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-order {
+  flex: 1;
+  padding: 10px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.btn-order:hover {
+  background: #229954;
+}
+
+.btn-delete {
+  padding: 10px 15px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+.add-menu-btn {
+  width: 100%;
+  padding: 15px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-menu-btn:hover {
+  background: #2980b9;
+}
+
+/* 주문 섹션 */
+.order-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.order-list {
+  margin-bottom: 25px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: #f8f9fa;
+}
+
+.order-item:hover {
+  background: #ecf0f1;
+  border-color: #bdc3c7;
+}
+
+.order-item .food-info {
+  flex: 1;
+}
+
+.order-item .food-name {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.order-item .quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #bdc3c7;
+  background: white;
+  color: #7f8c8d;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+  border-color: #3498db;
+  color: #3498db;
+  transform: scale(1.1);
+}
+
+.quantity-btn:active {
+  transform: scale(0.95);
+}
+
+.quantity-input {
+  width: 60px;
+  text-align: center;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.quantity-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.order-summary {
+  border-top: 2px solid #ecf0f1;
+  padding-top: 20px;
+}
+
+.total-amount {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 12px;
+  background: #e67e22;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.reset-btn:hover {
+  background: #d35400;
+}
+
+/* 팝업 스타일 */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  margin: 50px auto;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideIn 0.3s ease;
+}
+
+.popup-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ecf0f1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.save-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn {
+  background: #27ae60;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #229954;
+}
+
+.cancel-btn {
+  background: #95a5a6;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #7f8c8d;
+}
+
+/* 추가 스타일 */
+.no-items {
+  text-align: center;
+  color: #95a5a6;
+  font-style: italic;
+  padding: 40px 20px;
+}
+
+.food-price {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* 카테고리 버튼 스타일 개선 */
+.category-btn.active {
+  background: #3498db;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* 음식 아이템 호버 효과 개선 */
+.food-item:hover {
+  border-color: #3498db;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.2);
+  transform: translateY(-2px);
+}
+
+/* 주문 아이템 스타일 개선 */
+.order-item:hover {
+  background: #ecf0f1;
+  border-color: #bdc3c7;
+}
+
+/* 수량 컨트롤 개선 */
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #bdc3c7;
+  background: white;
+  color: #7f8c8d;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+  border-color: #3498db;
+  color: #3498db;
+  transform: scale(1.1);
+}
+
+.quantity-btn:active {
+  transform: scale(0.95);
+}
+
+.quantity-input {
+  width: 60px;
+  text-align: center;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.quantity-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* 버튼 호버 효과 개선 */
+.btn-order:hover,
+.btn-delete:hover,
+.add-menu-btn:hover,
+.reset-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-order:active,
+.btn-delete:active,
+.add-menu-btn:active,
+.reset-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 팝업 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 스크롤바 스타일 */
+.order-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.order-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.order-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.order-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 반응형 디자인 개선 */
+@media (max-width: 1024px) {
+  main {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+  }
+  
+  .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .container {
+    padding: 15px;
+  }
+  
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .popup-content {
+    margin: 20px;
+    width: auto;
+    max-width: 90%;
+  }
+  
+  .category-buttons {
+    justify-content: center;
+  }
+  
+  .food-item .actions {
+    flex-direction: column;
+  }
+  
+  .order-item {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .quantity-controls {
+    justify-content: center;
+  }
+}

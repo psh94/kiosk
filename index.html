@@ -1,60 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kiosk</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>키오스크 주문</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-    <!-- 메뉴란 -->
-    <div>
-        <h2>메뉴</h2>
-        <div>
-            <div>
-                <button data-category="전체">전체</button>
-            </div>
-            <div>
-                <button data-category="한식">한식</button>
-                <button data-category="한식" title="카테고리 삭제"> - </button>
-            </div>
-            <div>
-                <button data-category="일식">일식</button>
-                <button data-category="일식" title="카테고리 삭제"> - </button>
-            </div>
-            <div>
-                <button data-category="음료">음료</button>
-                <button data-category="음료" title="카테고리 삭제"> - </button>
-            </div>
-            <button id="addCategoryBtn">+</button>
+<body>햣
+  <div class="container">
+    <header>
+      <h1>키오스크 주문 시스템</h1>
+    </header>
+
+    <main>
+      <!-- 메뉴 섹션 -->
+      <section class="menu-section">
+        <div class="category-filters">
+          <h3>카테고리</h3>
+          <div id="categoryList" class="category-buttons">
+            <!-- 카테고리 버튼 생성 란 -->
+          </div>
+          <button id="addCategoryBtn" class="add-category-btn">+</button>
         </div>
-        
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>음식명</th>
-                        <th>가격</th>
-                        <th>설명</th>
-                        <th>카테고리</th>
-                        <th>작업</th>
-                    </tr>
-                </thead>
-                <tbody id="menuTableBody"></tbody>
-            </table>
+
+        <div class="menu-content">
+          <h3>메뉴</h3>
+          <div id="menuList" class="menu-grid">
+            <!-- 메뉴 리스트 생성 란 -->
+          </div>
+          <button id="addFoodBtn" class="add-menu-btn">메뉴 등록</button>
         </div>
-        <button id="menuRegisterBtn">메뉴 등록</button>
+      </section>
+
+      <!-- 주문 내역 섹션 -->
+      <section class="order-section">
+        <h3>주문 내역</h3>
+        <div id="orderList" class="order-list">
+            <!-- 주문 리스트 생성 란 -->
+        </div>
+        <div class="order-summary">
+          <p class="total-amount">총 금액: <span id="totalAmount">0</span>원</p>
+          <button id="resetOrderBtn" class="reset-btn">주문 초기화</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 카테고리 추가 팝업 -->
+  <div id="categoryPopup" class="popup">
+    <div class="popup-content">
+      <h3>카테고리 추가</h3>
+      <div class="form-group">
+        <label for="categoryName">카테고리명</label>
+        <input type="text" id="categoryName" placeholder="카테고리명을 입력하세요" />
+      </div>
+      <div class="popup-buttons">
+        <button id="saveCategoryBtn" class="save-btn">저장</button>
+        <button class="closePopup cancel-btn">취소</button>
+      </div>
     </div>
+  </div>
 
-    <!-- 주문란 -->
-    <div>
-        <h2> 주문 </h2>
-        <div id="orderList"></div>
-
-        <div>
-            총금액: <span id="totalAmount">0</span>원
-        </div>
-
-        <button id="resetOrderBtn">주문 초기화</button>
+  <!-- 메뉴 추가 팝업 -->
+  <div id="foodPopup" class="popup">
+    <div class="popup-content">
+      <h3>메뉴 등록</h3>
+      <div class="form-group">
+        <label for="foodCategory">카테고리</label>
+        <select id="foodCategory" required>
+          <option value="">카테고리를 선택하세요</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="foodName">음식명</label>
+        <input type="text" id="foodName" placeholder="음식명을 입력하세요" required />
+      </div>
+      <div class="form-group">
+        <label for="foodPrice">가격</label>
+        <input type="number" id="foodPrice" placeholder="가격을 입력하세요" min="0" required />
+      </div>
+      <div class="form-group">
+        <label for="foodDesc">설명</label>
+        <textarea id="foodDesc" placeholder="음식에 대한 설명을 입력하세요" rows="3"></textarea>
+      </div>
+      <div class="popup-buttons">
+        <button id="saveFoodBtn" class="save-btn">저장</button>
+        <button class="closePopup cancel-btn">취소</button>
+      </div>
     </div>
+  </div>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
