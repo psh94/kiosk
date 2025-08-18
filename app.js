@@ -219,14 +219,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-  function popupStyleDisplay(popup, type){
-    popup.style.display = type;
+  function popupStyleDisplayBlock(popup){
+    popup.style.display = "block";
+  }
+  function popupStyleDisplayNone(popup){
+    popup.style.display = "none";
   }
 
   // 카테고리 추가 팝업
   document.getElementById("addCategoryBtn").onclick = () => {
     document.getElementById("categoryName").value = "";
-    popupStyleDisplay(categoryPopup, "block");
+    popupStyleDisplayBlock(categoryPopup);
   };
 
   // 메뉴 추가 팝업
@@ -254,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("foodName").value = "";
     document.getElementById("foodPrice").value = "";
     document.getElementById("foodDesc").value = "";
-    popupStyleDisplay(foodPopup, "block");
+    popupStyleDisplayBlock(foodPopup);
   };
 
   // 카테고리 저장
@@ -269,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       categories.push(newCategory);
       renderCategories();
-      popupStyleDisplay(categoryPopup, "none");
+      popupStyleDisplayNone(categoryPopup);
     } else {
       alert("카테고리명을 입력해주세요.");
     }
@@ -309,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
     foods.push(newFood);
 
     renderFoods();
-    popupStyleDisplay(foodPopup,"none")
+    popupStyleDisplayNone(foodPopup);
   };
 
   // 팝업 닫기
@@ -323,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".popup").forEach(popup => {
     popup.onclick = (e) => {
       if (e.target === popup) {
-        popupStyleDisplay(popup, "none");
+        popupStyleDisplayNone(popup);
       }
     };
   });
@@ -340,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       document.querySelectorAll(".popup").forEach(popup => {
-        popupStyleDisplay(popup, "none");
+        popupStyleDisplayNone(popup);
       });
     }
   });
