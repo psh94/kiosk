@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 메뉴 추가 팝업
   document.getElementById("addFoodBtn").onclick = () => {
     const select = document.getElementById("foodCategory");
-    select.innerHTML = '<option value="">카테고리를 선택하세요</option>';
+    select.innerHTML = '<option value="">카테고리를 선택하시오.</option>';
     
     // 내장 카테고리가 아닌 것들만 표시
     categories.filter(c => !c.builtin && c.id !== "all")
@@ -235,8 +235,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const option = document.createElement("option");
         option.value = cat.id;
         option.textContent = cat.name;
+        option.className = "categoryOption";
         select.appendChild(option);
       });
+    
+    const categoryOptions = document.querySelectorAll(".categoryOption");
+    categoryOptions.forEach(catop => {
+      if(catop.value === selectedCategory){
+        document.querySelector("#foodCategory").value = catop.value;
+      }
+    });
     
     document.getElementById("foodName").value = "";
     document.getElementById("foodPrice").value = "";
