@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".popup").forEach(popup => {
     popup.onclick = (e) => {
       if (e.target === popup) {
-        popup.style.display = "none";
+        popupStyleDisplay(popup, "none");
       }
     };
   });
@@ -340,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       document.querySelectorAll(".popup").forEach(popup => {
-        popup.style.display = "none";
+        popupStyleDisplay(popup, "none");
       });
     }
   });
