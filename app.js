@@ -17,9 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   let orders = [];
   let selectedCategory = "all";
-
-  // let dateNow = Date.now(); 
-  // DOM 로드 시에만 호출, 이후 재호출 X ---> 값 변화 X
+  let dateNowValue = "";
 
   // DOM 요소들
   const categoryList    = document.getElementById("categoryList");
@@ -31,9 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryPopup   = document.getElementById("categoryPopup");
   const foodPopup       = document.getElementById("foodPopup");
 
+
   function formatNumber(num) {
     return num.toLocaleString("ko-KR");
   }
+  
+  function dateNow () {
+    dateNowValue = Date.now(); 
+  }
+
 
   // 카테고리 렌더링
   function renderCategories() {
@@ -256,10 +260,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 카테고리 저장
   document.getElementById("saveCategoryBtn").onclick = () => {
     const name = document.getElementById("categoryName").value.trim();
-    const dateNow = Date.now();
+    dateNow();
     if (name) {
       const newCategory = {
-        id: dateNow,
+        id: dateNowValue,
         name: name,
         builtin: false
       };
@@ -277,9 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const price = parseInt(document.getElementById("foodPrice").value) || 0;
     const desc = document.getElementById("foodDesc").value.trim();
     const categoryId = document.getElementById("foodCategory").value;
+    dateNow();
 
-    const dateNow = Date.now();
-    
     if (!name) {
       alert("음식명을 입력해주세요.");
       return;
@@ -296,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     const newFood = {
-      id: dateNow,
+      id: dateNowValue,
       name: name,
       price: price,
       desc: desc,
