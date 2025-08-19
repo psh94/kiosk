@@ -33,9 +33,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function formatNumber(num) {
     return num.toLocaleString("ko-KR");
   }
-  
   function dateNow () {
-    dateNowValue = Date.now(); 
+    dateNowValue = Date.now().toString();
+  }
+  function popupStyleDisplayBlock(popup){
+    popup.style.display = "block";
+  }
+  function popupStyleDisplayNone(popup){
+    popup.style.display = "none";
   }
 
 
@@ -84,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // 음식 메뉴 렌더링
   function renderFoods() {
     menuList.innerHTML = "";
-    
     const filteredFoods = selectedCategory === "all" 
       ? foods 
       : foods.filter(f => f.categoryId === selectedCategory);
@@ -207,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };      
     });
-    
   }
 
   function renderTotalPrice(){
@@ -217,13 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
       total += food.price * order.quantity;
       totalAmount.textContent = formatNumber(total);
     });
-  }
-  
-  function popupStyleDisplayBlock(popup){
-    popup.style.display = "block";
-  }
-  function popupStyleDisplayNone(popup){
-    popup.style.display = "none";
   }
 
   // 카테고리 추가 팝업
