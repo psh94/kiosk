@@ -5,9 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
   
   let foods = [
-    { id: 1, name: "비빔밥",  price: 12000, desc: "육회 들어감",  categoryId: 1 },
-    { id: 2, name: "피자",    price: 22000, desc: "치즈 폭탄",    categoryId: 2 },
-    { id: 3, name: "초밥",    price: 18000, desc: "모둠초밥",     categoryId: 3 }
+
   ];
   
   let orders = [];
@@ -40,8 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
     popup.style.display = "none";
   }
 
-  const API_BASE = 'http://localhost:8080';
 
+  //-------------------------------------------------------------------------------
+  const API_BASE = 'http://localhost:8080';
+  //-------------------------------------------------------------------------------
   // GET 요청
   async function loadCategories() {
     try {
@@ -89,6 +89,56 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("POST 실패:", err);
     }
   }
+  //-------------------------------------------------------------------------------
+  // GET 요청
+  async function loadMenu() {
+    try {
+      const res = await fetch(`${API_BASE}/menu`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      data = await res.json();
+      console.log("카테고리 목록:", data);
+    } catch (err) {
+      console.error("호출 실패:", err);
+    }
+  }
+
+  // POST 요청
+  async function addMenu(addedData) {
+    console.log(addedData);
+    try {
+      const res = await fetch(`${API_BASE}/menu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(addedData)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      console.log("생성된 카테고리:", data);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+  
+
+  // DELETE 요청
+  async function deleteMenu(id) {
+    console.log(id);
+    try {
+      const res = await fetch(`${API_BASE}/menu`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(id)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      console.log("생성된 카테고리:", data);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+  //-------------------------------------------------------------------------------
 
   // 카테고리 렌더링
   async function renderCategories() {
@@ -320,7 +370,8 @@ document.addEventListener("DOMContentLoaded", () => {
         id: dateNowValue,
         name: name
       };
-      console.log(newCategory.id);
+
+      
       await addCategory(newCategory);
       await renderCategories();
       popupStyleDisplayNone(categoryPopup);
