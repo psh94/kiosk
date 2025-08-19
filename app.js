@@ -1,23 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   // 초기 데이터
   let categories = [
-    { id: "all",        name: "전체", builtin: true },
-    { id: "korean",     name: "한식", builtin: false },
-    { id: "japanese",   name: "일식", builtin: false },
-    { id: "italian",    name: "양식", builtin: false },
-    { id: "drinks",     name: "음료", builtin: false }
+    { id: "all", name: "전체"}
   ];
   
   let foods = [
-    { id: "1", name: "비빔밥",  price: 12000, desc: "육회 들어감",  categoryId: "korean" },
-    { id: "2", name: "피자",    price: 22000, desc: "치즈 폭탄",    categoryId: "italian" },
-    { id: "3", name: "초밥",    price: 18000, desc: "모둠초밥",     categoryId: "japanese" }
+    { id: 1, name: "비빔밥",  price: 12000, desc: "육회 들어감",  categoryId: 1 },
+    { id: 2, name: "피자",    price: 22000, desc: "치즈 폭탄",    categoryId: 2 },
+    { id: 3, name: "초밥",    price: 18000, desc: "모둠초밥",     categoryId: 3 }
   ];
   
   let orders = [];
   let selectedCategory = "all";
   let dateNowValue = "";
+  let data = [];
+
 
   // DOM 요소들
   const categoryList    = document.getElementById("categoryList");
@@ -34,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return num.toLocaleString("ko-KR");
   }
   function dateNow () {
-    dateNowValue = Date.now().toString();
+    dateNowValue = Date.now();
   }
   function popupStyleDisplayBlock(popup){
     popup.style.display = "block";
@@ -43,9 +40,67 @@ document.addEventListener("DOMContentLoaded", () => {
     popup.style.display = "none";
   }
 
+  const API_BASE = 'http://localhost:8080';
+
+  // GET 요청
+  async function loadCategories() {
+    try {
+      const res = await fetch(`${API_BASE}/categories`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      data = await res.json();
+      console.log("카테고리 목록:", data);
+    } catch (err) {
+      console.error("호출 실패:", err);
+    }
+  }
+
+  // POST 요청
+  async function addCategory(addedData) {
+    console.log(addedData);
+    try {
+      const res = await fetch(`${API_BASE}/categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(addedData)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      console.log("생성된 카테고리:", data);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+
+  // DELETE 요청
+  async function deleteCategory(id) {
+    console.log(id);
+    try {
+      const res = await fetch(`${API_BASE}/categories`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(id)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      console.log("생성된 카테고리:", data);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
 
   // 카테고리 렌더링
-  function renderCategories() {
+  async function renderCategories() {
+    categories = [
+      { id: "all", name: "전체"}
+    ];
+
+    await loadCategories();
+    data.forEach(d => {
+      categories.push(d);
+    });
+
     categoryList.innerHTML = "";
     categories.forEach(cat => {
       const btn = document.createElement("button");
@@ -62,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       categoryList.appendChild(btn);
 
       // 삭제 버튼 (내장 카테고리가 아닌 경우에만)
-      if (!cat.builtin && cat.id !== "all") {
+      if (cat.id !== "all") {
         const delBtn = document.createElement("button");
         delBtn.className = "category-btn delete";
         delBtn.textContent = "삭제";
@@ -70,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (confirm(`"${cat.name}" 카테고리를 삭제하시겠습니까?`)) {
             // 해당 카테고리의 음식들도 함께 삭제
             foods = foods.filter(f => f.categoryId !== cat.id);
-            categories = categories.filter(c => c.id !== cat.id);
+            deleteCategory(cat.id);
             
             // 현재 선택된 카테고리가 삭제된 경우 전체로 변경
             if (selectedCategory === cat.id) {
@@ -234,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
     select.innerHTML = '<option value="">카테고리를 선택하시오.</option>';
     
     // 내장 카테고리가 아닌 것들만 표시
-    categories.filter(c => !c.builtin && c.id !== "all")
+    categories.filter(c => c.id !== "all")
       .forEach(cat => {
         const option = document.createElement("option");
         option.value = cat.id;
@@ -257,17 +312,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 카테고리 저장
-  document.getElementById("saveCategoryBtn").onclick = () => {
+  document.getElementById("saveCategoryBtn").onclick = async () => {
     const name = document.getElementById("categoryName").value.trim();
     dateNow();
     if (name) {
-      const newCategory = {
+      newCategory = {
         id: dateNowValue,
-        name: name,
-        builtin: false
+        name: name
       };
-      categories.push(newCategory);
-      renderCategories();
+      console.log(newCategory.id);
+      await addCategory(newCategory);
+      await renderCategories();
       popupStyleDisplayNone(categoryPopup);
     } else {
       alert("카테고리명을 입력해주세요.");
