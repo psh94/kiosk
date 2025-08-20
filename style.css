@@ -333,6 +333,20 @@ main {
   transition: background 0.3s ease;
 }
 
+.order-btn {
+  margin-top: 5px;
+  width: 100%;
+  padding: 12px;
+  background: #2990c2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
 .reset-btn:hover {
   background: #d35400;
 }

@@ -1,23 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   // 초기 데이터
   let categories = [
-    { id: "all",        name: "전체", builtin: true },
-    { id: "korean",     name: "한식", builtin: false },
-    { id: "japanese",   name: "일식", builtin: false },
-    { id: "italian",    name: "양식", builtin: false },
-    { id: "drinks",     name: "음료", builtin: false }
+    { id: "all", name: "전체"}
   ];
   
-  let foods = [
-    { id: "1", name: "비빔밥",  price: 12000, desc: "육회 들어감",  categoryId: "korean" },
-    { id: "2", name: "피자",    price: 22000, desc: "치즈 폭탄",    categoryId: "italian" },
-    { id: "3", name: "초밥",    price: 18000, desc: "모둠초밥",     categoryId: "japanese" }
-  ];
-  
+  let foods = [];
   let orders = [];
   let selectedCategory = "all";
   let dateNowValue = "";
+  let randomNumber = "";
+  let randomId = "";
+  let data = [];
+  let menuData = [];
+
 
   // DOM 요소들
   const categoryList    = document.getElementById("categoryList");
@@ -29,12 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryPopup   = document.getElementById("categoryPopup");
   const foodPopup       = document.getElementById("foodPopup");
 
-
   function formatNumber(num) {
     return num.toLocaleString("ko-KR");
   }
-  function dateNow () {
-    dateNowValue = Date.now().toString();
+  function makeRandomId () {
+    dateNowValue = Date.now();
+    randomNumber = parseInt(Math.random()*10000);
+    randomId = dateNowValue + randomNumber;
   }
   function popupStyleDisplayBlock(popup){
     popup.style.display = "block";
@@ -44,8 +40,156 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+  //-------------------------------------------------------------------------------
+  const API_BASE = 'http://localhost:8080';
+  //-------------------------------------------------------------------------------
+  // GET 요청
+  async function loadCategories() {
+    try {
+      const res = await fetch(`${API_BASE}/categories`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      data = await res.json();
+    } catch (err) {
+      console.error("호출 실패:", err);
+    }
+  }
+
+  // POST 요청
+  async function addCategory(addedData) {
+    try {
+      const res = await fetch(`${API_BASE}/categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(addedData)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+
+  // DELETE 요청
+  async function deleteCategory(id) {
+    try {
+      const res = await fetch(`${API_BASE}/categories`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(id)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+  //-------------------------------------------------------------------------------
+  // GET 요청
+  async function loadMenu() {
+    try {
+      const res = await fetch(`${API_BASE}/menu`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      menuData = await res.json();
+    } catch (err) {
+      console.error("호출 실패:", err);
+    }
+  }
+
+  // POST 요청
+  async function addMenu(addedData) {
+    try {
+      const res = await fetch(`${API_BASE}/menu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(addedData)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+  
+
+  // DELETE 요청
+  async function deleteMenu(id) {
+    try {
+      const res = await fetch(`${API_BASE}/menu`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(id)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+  //-------------------------------------------------------------------------------
+
+  // POST 요청
+  async function addOrder(newOrder) {
+    try {
+      const res = await fetch(`${API_BASE}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newOrder)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      addOrderItem(newOrder.id);
+    } catch (err) {
+      console.error("POST 실패:", err);
+    }
+  }
+  //-------------------------------------------------------------------------------
+  // POST 요청
+  async function addOrderItem(newOrderId) {
+    orders.forEach(async order => {
+      makeRandomId();
+      let newOrderItem = {
+        id: randomId,
+        menuId: order.foodId,
+        quantity: order.quantity,
+        orderId: newOrderId
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/orderItems`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(newOrderItem)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+      } catch (err) {
+        console.error("POST 실패:", err);
+      }
+    });
+    
+
+
+    
+  }
+  //-------------------------------------------------------------------------------
+
   // 카테고리 렌더링
-  function renderCategories() {
+  async function renderCategories() {
+    categories = [
+      { id: "all", name: "전체"}
+    ];
+
+    await loadCategories();
+    data.forEach(d => {
+      categories.push(d);
+    });
+
     categoryList.innerHTML = "";
     categories.forEach(cat => {
       const btn = document.createElement("button");
@@ -62,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
       categoryList.appendChild(btn);
 
       // 삭제 버튼 (내장 카테고리가 아닌 경우에만)
-      if (!cat.builtin && cat.id !== "all") {
+      if (cat.id !== "all") {
         const delBtn = document.createElement("button");
         delBtn.className = "category-btn delete";
         delBtn.textContent = "삭제";
@@ -70,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (confirm(`"${cat.name}" 카테고리를 삭제하시겠습니까?`)) {
             // 해당 카테고리의 음식들도 함께 삭제
             foods = foods.filter(f => f.categoryId !== cat.id);
-            categories = categories.filter(c => c.id !== cat.id);
+            deleteCategory(cat.id);
             
             // 현재 선택된 카테고리가 삭제된 경우 전체로 변경
             if (selectedCategory === cat.id) {
@@ -87,7 +231,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 음식 메뉴 렌더링
-  function renderFoods() {
+  async function renderFoods() {
+    foods = [];
+    await loadMenu();
+    menuData.forEach(d => {
+      foods.push(d);
+    });
     menuList.innerHTML = "";
     const filteredFoods = selectedCategory === "all" 
       ? foods 
@@ -104,7 +253,9 @@ document.addEventListener("DOMContentLoaded", () => {
       div.innerHTML = `
         <h4>${food.name}</h4>
         <div class="price">${formatNumber(food.price)}원</div>
-        <div class="description">${food.desc}</div>
+        <div class="description">
+          ${food.description !== (undefined || null) ? food.description : ""}
+        </div>
         <div class="actions">
           <button class="btn-order">주문</button>
           <button class="btn-delete">삭제</button>
@@ -112,12 +263,12 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       
       // 주문 버튼 이벤트
-      div.querySelector(".btn-order").onclick = () => addOrder(food.id);
+      div.querySelector(".btn-order").onclick = () => updateOrderList(food.id);
       
       // 삭제 버튼 이벤트
-      div.querySelector(".btn-delete").onclick = () => {
+      div.querySelector(".btn-delete").onclick = async () => {
         if (confirm(`"${food.name}"을(를) 삭제하시겠습니까?`)) {
-          foods = foods.filter(f => f.id !== food.id);
+          await deleteMenu(food.id);
           renderFoods();
         }
       };
@@ -127,9 +278,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 주문 추가
-  function addOrder(foodId) {
+  function updateOrderList(foodId) {
     const existingOrder = orders.find(o => o.foodId === foodId);
-    
     if (existingOrder) {
       existingOrder.quantity++;
     } else {
@@ -234,7 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
     select.innerHTML = '<option value="">카테고리를 선택하시오.</option>';
     
     // 내장 카테고리가 아닌 것들만 표시
-    categories.filter(c => !c.builtin && c.id !== "all")
+    categories.filter(c => c.id !== "all")
       .forEach(cat => {
         const option = document.createElement("option");
         option.value = cat.id;
@@ -245,7 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const categoryOptions = document.querySelectorAll(".categoryOption");
     categoryOptions.forEach(catop => {
-      if(catop.value === selectedCategory){
+      if(catop.value === selectedCategory.toString()){
         document.querySelector("#foodCategory").value = catop.value;
       }
     });
@@ -257,17 +407,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 카테고리 저장
-  document.getElementById("saveCategoryBtn").onclick = () => {
+  document.getElementById("saveCategoryBtn").onclick = async () => {
     const name = document.getElementById("categoryName").value.trim();
-    dateNow();
+    makeRandomId();
     if (name) {
-      const newCategory = {
-        id: dateNowValue,
-        name: name,
-        builtin: false
+      newCategory = {
+        id: randomId,
+        name: name
       };
-      categories.push(newCategory);
-      renderCategories();
+
+      
+      await addCategory(newCategory);
+      await renderCategories();
       popupStyleDisplayNone(categoryPopup);
     } else {
       alert("카테고리명을 입력해주세요.");
@@ -275,12 +426,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 메뉴 저장
-  document.getElementById("saveFoodBtn").onclick = () => {
+  document.getElementById("saveFoodBtn").onclick = async () => {
     const name = document.getElementById("foodName").value.trim();
     const price = parseInt(document.getElementById("foodPrice").value) || 0;
     const desc = document.getElementById("foodDesc").value.trim();
     const categoryId = document.getElementById("foodCategory").value;
-    dateNow();
+    await makeRandomId();
 
     if (!name) {
       alert("음식명을 입력해주세요.");
@@ -298,14 +449,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     const newFood = {
-      id: dateNowValue,
+      id: randomId,
       name: name,
       price: price,
-      desc: desc,
+      description: desc,
       categoryId: categoryId
     };
     
-    foods.push(newFood);
+    await addMenu(newFood);
 
     renderFoods();
     popupStyleDisplayNone(foodPopup);
@@ -334,6 +485,19 @@ document.addEventListener("DOMContentLoaded", () => {
       renderOrders();
     }
   };
+
+  //주문하기
+  document.getElementById("orderBtn").onclick = async () => {
+    if(confirm("주문하시겠습니까?")){
+      
+      await makeRandomId();
+      let newOrder = {
+        id: randomId,
+        totalPrice: 0
+      }
+      await addOrder(newOrder);
+    }
+  }
 
   // ESC 키로 팝업 닫기
   document.addEventListener("keydown", (e) => {
