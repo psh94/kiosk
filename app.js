@@ -39,117 +39,29 @@ document.addEventListener("DOMContentLoaded", () => {
   //-------------------------------------------------------------------------------
   const API_BASE = 'http://localhost:8080';
   //-------------------------------------------------------------------------------
-  // 카테고리 GET 요청
-  async function loadCategories() {
-    try {
-      const res = await fetch(`${API_BASE}/categories`);
+  // HTTP 요청(GET 제외)
+  async function httpRequest(path, method, body){
+    try{
+      const res = await fetch(`${API_BASE}/${path}`,{
+        method: `${method}`,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
       if (!res.ok) throw new Error("HTTP " + res.status);
+    } catch(err) {
+      console.log("POST 실패: ", err)
+    }
+  }
+  // GET 요청
+  async function getRequest(path){
+    try{
+      const res = await fetch(`${API_BASE}/${path}`);
+      if(!res.ok) throw new Error("HTTP " + res.status);
       return await res.json();
     } catch (err) {
-      console.error("호출 실패:", err);
-    }
-  }
-  // 카테고리 POST 요청
-  async function addCategory(addedData) {
-    try {
-      const res = await fetch(`${API_BASE}/categories`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(addedData)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-    } catch (err) {
-      console.error("POST 실패:", err);
-    }
-  }
-  // 카테고리 DELETE 요청
-  async function deleteCategory(id) {
-    try {
-      const res = await fetch(`${API_BASE}/categories`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(id)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-    } catch (err) {
-      console.error("POST 실패:", err);
-    }
-  }
-  //-------------------------------------------------------------------------------
-  // 메뉴 GET 요청
-  async function loadMenu() {
-    try {
-      const res = await fetch(`${API_BASE}/menu`);
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      return await res.json();
-    } catch (err) {
-      console.error("호출 실패:", err);
-    }
-  }
-  // 메뉴 POST 요청
-  async function addMenu(addedData) {
-    try {
-      const res = await fetch(`${API_BASE}/menu`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(addedData)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-    } catch (err) {
-      console.error("POST 실패:", err);
-    }
-  }
-  // 메뉴 DELETE 요청
-  async function deleteMenu(id) {
-    try {
-      const res = await fetch(`${API_BASE}/menu`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(id)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-    } catch (err) {
-      console.error("POST 실패:", err);
-    }
-  }
-  //-------------------------------------------------------------------------------
-  // 주문 POST 요청
-  async function addOrder(newOrder) {
-    try {
-      const res = await fetch(`${API_BASE}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newOrder)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      await addOrderItems(newOrder.id);
-    } catch (err) {
-      console.error("POST 실패:", err);
-    }
-  }
-  // 주문 UPDATE 요청
-    async function updateOrder(newOrderId){
-    try {
-      const res = await fetch(`${API_BASE}/orders`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newOrderId)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-    } catch (err) {
-      console.error("POST 실패:", err);
+      console.err("호출 실패: ", err);
     }
   }
   //-------------------------------------------------------------------------------
@@ -164,25 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
         quantity: order.quantity,
         orderId: newOrderId
       }
-      await addOrderItem(newOrderItem);
+      // 주문 아이템 POST 요청
+      await httpRequest("orderItems", "POST", newOrderItem);
     }
   }
 
-  // 주문 아이템 POST 요청
-  async function addOrderItem(newOrderItem) {
-      try {
-        const res = await fetch(`${API_BASE}/orderItems`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(newOrderItem)
-        });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-      } catch (err) {
-        console.error("POST 실패:", err);
-      }
-  }
   //-------------------------------------------------------------------------------
   // 카테고리란 렌더링
   async function renderCategories() {
@@ -190,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
       { id: "all", name: "전체"}
     ];
 
-    const catData = await loadCategories();
+    // const catData = await loadCategories();
+    const catData = await getRequest("categories");
     for (const cd of catData) {
       categories.push(cd);
     }
@@ -219,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (confirm(`"${cat.name}" 카테고리를 삭제하시겠습니까?`)) {
             // 해당 카테고리의 음식들도 함께 삭제
             foods = foods.filter(f => f.categoryId !== cat.id);
-            deleteCategory(cat.id);
+            httpRequest("categories", "DELETE", cat.id);
             // 현재 선택된 카테고리가 삭제된 경우 전체로 변경
             if (selectedCategory === cat.id) {
               selectedCategory = "all";
@@ -240,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 메뉴란 초기화
     foods = [];
 
-    const menuData = await loadMenu();
+    const menuData = await getRequest("menu");
     for (const md of menuData) {
       foods.push(md);
     }
@@ -277,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!confirm(`"${food.name}"을(를) 삭제하시겠습니까?`)) {
           return;
         }
-        await deleteMenu(food.id);
+        await httpRequest("menu", "DELETE", food.id);
         renderFoods();
       };
       
@@ -425,7 +324,8 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       
-      await addCategory(newCategory);
+      // await addCategory(newCategory);
+      await httpRequest("categories", "POST", newCategory);
       await renderCategories();
       popupStyleDisplayNone(categoryPopup);
     } else {
@@ -464,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
       categoryId
     };
     
-    await addMenu(newFood);
+    await httpRequest("menu", "POST",newFood);
 
     renderFoods();
     popupStyleDisplayNone(foodPopup);
@@ -505,7 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
       totalPrice: 0
     }
     await addOrder(newOrder);
-    await updateOrder(newOrder.id);
+    await httpRequest("orders","PUT",newOrder.id);
 
     orders = [];
     renderOrders();
