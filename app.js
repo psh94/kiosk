@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let categories = [
     { id: "all", name: "전체"}
   ];
-  
   let orders = [];
   let selectedCategory = "all";
 
@@ -11,9 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryList    = document.getElementById("categoryList");
   const menuList        = document.getElementById("menuList");
   const orderList       = document.getElementById("orderList");
-
   const totalAmount     = document.getElementById("totalAmount");
-  
   const categoryPopup   = document.getElementById("categoryPopup");
   const foodPopup       = document.getElementById("foodPopup");
 
@@ -68,8 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 주문 아이템 추가 함수
   async function addOrderItems(newOrderId){
     for (const order of orders) {
-      console.log(order);
-      const id = makeRandomId();
+      const id = await makeRandomId();
       const newOrderItem = {
         id,
         menuId: order.foodId,
@@ -404,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 주문 아이템 생성
     await addOrderItems(newOrder.id);
     // 주문 totalPrice 업데이트
-    await httpRequest("orders", "PUT", newOrder.id);
+    await httpRequest("orders", "PATCH", newOrder.id);
 
     orders = [];
     renderOrders();
