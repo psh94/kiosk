@@ -87,8 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
     categories = [
       { id: "all", name: "전체"}
     ];
-
-    // const catData = await loadCategories();
     const catData = await getRequest("categories");
     for (const cd of catData) {
       categories.push(cd);
@@ -322,9 +320,6 @@ document.addEventListener("DOMContentLoaded", () => {
         id,
         name: name
       };
-
-      
-      // await addCategory(newCategory);
       await httpRequest("categories", "POST", newCategory);
       await renderCategories();
       popupStyleDisplayNone(categoryPopup);
@@ -404,8 +399,12 @@ document.addEventListener("DOMContentLoaded", () => {
       id,
       totalPrice: 0
     }
-    await addOrder(newOrder);
-    await httpRequest("orders","PUT",newOrder.id);
+    // 주문 생성
+    await httpRequest("orders", "POST", newOrder);
+    // 주문 아이템 생성
+    await addOrderItems(newOrder.id);
+    // 주문 totalPrice 업데이트
+    await httpRequest("orders", "PUT", newOrder.id);
 
     orders = [];
     renderOrders();
