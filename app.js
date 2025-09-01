@@ -18,12 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function formatNumber(num) {
     return num.toLocaleString("ko-KR");
   }
-  // 무작위 ID 생성
-  function makeRandomId () {
-    const dateNowValue = Date.now();
-    const randomNumber = parseInt(Math.random()*10000);
-    return dateNowValue + randomNumber;
-  }
   // popup의 display 스타일이 block
   function popupStyleDisplayBlock(popup){
     popup.style.display = "block";
@@ -62,22 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   //-------------------------------------------------------------------------------
-  // 주문 아이템 추가 함수
-  async function addOrderItems(newOrderId){
-    for (const order of orders) {
-      const id = await makeRandomId();
-      const newOrderItem = {
-        id,
-        menuId: order.foodId,
-        quantity: order.quantity,
-        orderId: newOrderId
-      }
-      // 주문 아이템 POST 요청
-      await httpRequest("orderItems", "POST", newOrderItem);
-    }
-  }
-
-  //-------------------------------------------------------------------------------
   // 카테고리란 렌더링
   async function renderCategories() {
     categories = [
@@ -112,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (confirm(`"${cat.name}" 카테고리를 삭제하시겠습니까?`)) {
             // 해당 카테고리의 음식들도 함께 삭제
             foods = foods.filter(f => f.categoryId !== cat.id);
-            httpRequest("categories", "DELETE", cat.id);
+            await httpRequest("categories", "DELETE", cat.id);
             // 현재 선택된 카테고리가 삭제된 경우 전체로 변경
             if (selectedCategory === cat.id) {
               selectedCategory = "all";
@@ -181,14 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // 주문 추가
   function updateOrderList(foodId) {
     // orders에 해당 item이 있는지 확인
-    const existingOrder = orders.find(o => o.foodId === foodId);
+    const existingOrder = orders.find(o => o.menuId === foodId);
     // 있으면 quantity만 증가
     if (existingOrder) {
       existingOrder.quantity++;
     } else {
       // 없으면 orders에 해당 item 추가
       orders.push({ 
-        foodId, 
+        menuId: foodId,
         quantity: 1 
       });
     }
@@ -206,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     orders.forEach(order => {
-      const food = foods.find(f => f.id === order.foodId);
+      const food = foods.find(f => f.id === order.menuId);
       if (!food) return;
       
       const orderItem = document.createElement("div");
@@ -267,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderTotalPrice(){
     let total = 0;
     orders.forEach(order => {
-      const food = foods.find(f => f.id === order.foodId);
+      const food = foods.find(f => f.id === order.menuId);
       total += food.price * order.quantity;
       totalAmount.textContent = formatNumber(total);
     });
@@ -310,10 +288,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // 카테고리 저장
   document.getElementById("saveCategoryBtn").onclick = async () => {
     const name = document.getElementById("categoryName").value.trim();
-    const id = makeRandomId();
     if (name) {
       newCategory = {
-        id,
         name: name
       };
       await httpRequest("categories", "POST", newCategory);
@@ -330,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const price = parseInt(document.getElementById("foodPrice").value) || 0;
     const description = document.getElementById("foodDesc").value.trim();
     const categoryId = document.getElementById("foodCategory").value;
-    const id = makeRandomId();
 
     if (!name) {
       alert("음식명을 입력해주세요.");
@@ -348,7 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     const newFood = {
-      id,
       name,
       price,
       description,
@@ -390,17 +364,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!confirm("주문하시겠습니까?")){
       return;
     }
-    const id = makeRandomId();
-    const newOrder = {
-      id,
-      totalPrice: 0
-    }
     // 주문 생성
-    await httpRequest("orders", "POST", newOrder);
-    // 주문 아이템 생성
-    await addOrderItems(newOrder.id);
-    // 주문 totalPrice 업데이트
-    await httpRequest("orders", "PATCH", newOrder.id);
+    await httpRequest("orders", "POST", orders);
 
     orders = [];
     renderOrders();
